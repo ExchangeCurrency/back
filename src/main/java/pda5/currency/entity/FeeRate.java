@@ -9,7 +9,7 @@ import pda5.currency.global.BasicEntity;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "feeRate")
+@Table(name = "fee_rate")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

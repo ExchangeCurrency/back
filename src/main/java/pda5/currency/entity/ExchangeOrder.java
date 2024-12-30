@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import pda5.currency.global.BasicEntity;
 
 @Entity
-@Table(name = "exchangeOrder")
+@Table(name = "exchange_order")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

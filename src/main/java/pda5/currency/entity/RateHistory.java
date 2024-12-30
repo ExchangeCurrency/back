@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "rateHistory")
+@Table(name = "rate_history")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
