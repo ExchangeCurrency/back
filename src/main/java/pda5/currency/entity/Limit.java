@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import pda5.currency.global.BasicEntity;
 
 @Entity
-@Table(name = "Limits")
+@Table(name = "exchange_limit")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

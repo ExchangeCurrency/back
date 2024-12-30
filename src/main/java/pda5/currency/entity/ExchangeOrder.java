@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import pda5.currency.global.BasicEntity;
 
 @Entity
-@Table(name = "ExchangeOrders")
+@Table(name = "exchangeOrder")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,10 +30,10 @@ public class ExchangeOrder extends BasicEntity {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "from_currency", nullable = false)
+    @JoinColumn(name = "from_currency",nullable = false)
     private Currency fromCurrency;
 
     @ManyToOne
-    @JoinColumn(name = "to_currency", nullable = false)
+    @JoinColumn(name = "to_currency",nullable = false)
     private Currency toCurrency;
 }

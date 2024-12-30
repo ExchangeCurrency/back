@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import pda5.currency.global.BasicEntity;
 
 @Entity
-@Table(name = "AuditLogs")
+@Table(name = "auditLog")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +23,5 @@ public class AuditLog extends BasicEntity {
 
     private String eventType;
 
-    @Lob
     private String description;
 }
