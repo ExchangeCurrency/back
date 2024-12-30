@@ -1,16 +1,12 @@
 package pda5.currency.service;
 
-import lombok.RequiredArgsConstructor;
-import pda5.currency.entity.User;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pda5.currency.dto.exchange.ExchangeOrderRequestDTO;
 import pda5.currency.dto.exchange.ExchangeOrderResponseDTO;
-import pda5.currency.entity.Account;
-import pda5.currency.entity.Currency;
-import pda5.currency.entity.CurrencyRate;
-import pda5.currency.entity.ExchangeOrder;
+import pda5.currency.entity.*;
+import pda5.currency.global.CustomException;
 import pda5.currency.repository.*;
 
 import java.time.LocalDateTime;
@@ -31,19 +27,19 @@ public class ExchangeOrderService {
     public ExchangeOrderResponseDTO createExchangeOrder(ExchangeOrderRequestDTO requestDTO) {
 
         User user = userRepository.findById(requestDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new CustomException("User not found", "USER_NOT_FOUND"));
 
         Currency fromCurrency = currencyRepository.findById(requestDTO.getFromCurrencyId())
-                .orElseThrow(() -> new RuntimeException("From Currency not found"));
+                .orElseThrow(() -> new CustomException("From Currency not found", "FROM_CURRENCY_NOT_FOUND"));
 
         Currency toCurrency = currencyRepository.findById(requestDTO.getToCurrencyId())
-                .orElseThrow(() -> new RuntimeException("To Currency not found"));
+                .orElseThrow(() -> new CustomException("To Currency not found", "TO_CURRENCY_NOT_FOUND"));
 
         CurrencyRate currencyRate = currencyRateRepository.findByFromCurrency_CurrencyIdAndToCurrency_CurrencyId(
                         requestDTO.getFromCurrencyId(), requestDTO.getToCurrencyId())
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Exchange rate not found"));
+                .orElseThrow(() -> new CustomException("Exchange rate not found", "EXCHANGE_RATE_NOT_FOUND"));
 
         Double toAmount = requestDTO.getFromAmount() * currencyRate.getRate();
 
@@ -60,14 +56,14 @@ public class ExchangeOrderService {
 
         ExchangeOrder savedOrder = exchangeOrderRepository.save(exchangeOrder);
 
-        //계좌 업데이트
+        // 계좌 업데이트
         Account fromAccount = accountRepository.findByUser_UserId(requestDTO.getUserId()).stream()
                 .filter(account -> account.getCurrency().getCurrencyId().equals(requestDTO.getFromCurrencyId()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Source account not found"));
+                .orElseThrow(() -> new CustomException("Source account not found", "SOURCE_ACCOUNT_NOT_FOUND"));
 
         if (fromAccount.getBalance() < requestDTO.getFromAmount()) {
-            throw new RuntimeException("Insufficient balance");
+            throw new CustomException("Insufficient balance", "INSUFFICIENT_BALANCE");
         }
 
         fromAccount.setBalance(fromAccount.getBalance() - requestDTO.getFromAmount());
@@ -76,7 +72,7 @@ public class ExchangeOrderService {
         Account toAccount = accountRepository.findByUser_UserId(requestDTO.getUserId()).stream()
                 .filter(account -> account.getCurrency().getCurrencyId().equals(requestDTO.getToCurrencyId()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Target account not found"));
+                .orElseThrow(() -> new CustomException("Target account not found", "TARGET_ACCOUNT_NOT_FOUND"));
 
         toAccount.setBalance(toAccount.getBalance() + toAmount);
         accountRepository.save(toAccount);
@@ -95,7 +91,6 @@ public class ExchangeOrderService {
                 savedOrder.getStatus()
         );
     }
-
 
     public List<ExchangeOrderResponseDTO> getExchangeOrdersByUserId(Integer userId) {
         List<ExchangeOrder> exchangeOrders = exchangeOrderRepository.findByUser_UserId(userId);
