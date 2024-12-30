@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-@PropertySource("application.yml")
+@PropertySource("application.yaml")
 public class RedisProperties {
     @Value("${redis.port}")
     private int port;

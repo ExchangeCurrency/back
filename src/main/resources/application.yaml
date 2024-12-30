@@ -3,7 +3,7 @@ spring:
     name: currency
 
   datasource:
-    url: jdbc:mysql://localhost:3306/exchange
+    url: jdbc:mysql://localhost:3306/currency
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
