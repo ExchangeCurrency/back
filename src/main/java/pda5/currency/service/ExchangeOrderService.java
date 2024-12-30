@@ -1,5 +1,6 @@
 package pda5.currency.service;
 
+import lombok.RequiredArgsConstructor;
 import pda5.currency.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +18,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ExchangeOrderService {
 
-    @Autowired
-    private ExchangeOrderRepository exchangeOrderRepository;
-
-    @Autowired
-    private CurrencyRateRepository currencyRateRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CurrencyRepository currencyRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
+    private final ExchangeOrderRepository exchangeOrderRepository;
+    private final CurrencyRateRepository currencyRateRepository;
+    private final UserRepository userRepository;
+    private final CurrencyRepository currencyRepository;
+    private final AccountRepository accountRepository;
 
     @Transactional
     public ExchangeOrderResponseDTO createExchangeOrder(ExchangeOrderRequestDTO requestDTO) {
